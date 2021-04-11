@@ -26,4 +26,8 @@ app.listen(process.env.PORT, () => {
   console.log("Server is running on Port: ", process.env.PORT);
 })
 
-receiver.connect(()=>{console.log('Conectou')}, (message) => console.log(message));
+receiver.connect(()=>{
+  console.log('Connected to Broker')
+}, () => {
+  console.log('Message Received');
+});
