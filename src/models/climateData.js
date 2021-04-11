@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 
 let ClimateDataSchema = new Schema({
   generator: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: String,
     ref:'Generator'
   },
   umidity: {

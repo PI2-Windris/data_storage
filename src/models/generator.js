@@ -17,4 +17,12 @@ let GeneratorSchema = new Schema({
   ]
 }, { _id: false });
 
+GeneratorSchema.statics.findOrCreate = async function (condition, callback) {
+  const self = this;
+  return self.findOne(condition, (err, result) => {
+    return result ? result : self.create(condition, (err, result) => { callback(err, result)})
+  })
+}
+
+
 module.exports = mongoose.model('Generator', GeneratorSchema);
