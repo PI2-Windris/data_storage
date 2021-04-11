@@ -1,5 +1,5 @@
 const mqtt = require("mqtt");
-const logger = require("pino")({ prettyPrint: true });
+const logger = require("../utils/logger");
 const helper = require("./helpers");
 const dataController = require("../controllers/data");
 
