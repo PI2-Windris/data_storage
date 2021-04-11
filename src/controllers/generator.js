@@ -5,7 +5,7 @@ const energyData = require("../models/energyData");
 const generatorController = {
   create: async (req, res) => {
     try {
-      const { generatorId, userId } = req.data;
+      const { generatorId, userId } = req.body;
       const currentGenerator = await generator.findOrCreate({
         _id: generatorId,
       });
@@ -25,7 +25,7 @@ const generatorController = {
   },
   findByUser: async (req, res) => {
     try {
-      const data = await generator.find().populate();
+      const data = await generator.find({ userId: req.params.userId});
 
       return res.json(data);
     } catch (e) {
@@ -61,6 +61,40 @@ const generatorController = {
       return res.json(e).status(400);
     }
   },
+
+  energyDataByGenerator: async (req, res) => {
+    try {
+      const { generatorId } = req.params;
+
+      const data = await generator.findById(generatorId).populate('energyData')
+
+      res.json(data);
+    } catch (e) {
+      res.json(e).status(400);
+    }
+  },
+  climateDataByGenerator: async (req, res) => {
+    try {
+      const { generatorId } = req.params;
+
+      const data = await generator.findById(generatorId).populate('climateData')
+
+      res.json(data);
+    } catch (e) {
+      res.json(e).status(400);
+    }
+  },
+  get: async (req, res) => {
+    try {
+      const { generatorId } = req.params;
+
+      const data = await generator.findById(generatorId);
+
+      res.json(data);
+    } catch (e) {
+      res.json(e).status(400);
+    }
+  }
 };
 
 module.exports = generatorController;

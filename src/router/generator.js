@@ -5,10 +5,16 @@ const router = express.Router();
 
 router.post("/", generatorController.create);
 
-router.get("/:userId", generatorController.findByUser);
+router.get("/user/:userId", generatorController.findByUser);
 
-router.get("/:userId/energy", generatorController.energyDataByUser);
+router.get("/user/:userId/energy", generatorController.energyDataByUser);
 
-router.get("/:userId/climate", generatorController.climateDataByUser);
+router.get("/user/:userId/climate", generatorController.climateDataByUser);
+
+router.get("/:generatorId/climate", generatorController.climateDataByGenerator);
+
+router.get("/:generatorId/energy", generatorController.energyDataByGenerator);
+
+router.get("/:generatorId", generatorController.get);
 
 module.exports = router;

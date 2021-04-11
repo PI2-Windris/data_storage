@@ -20,11 +20,12 @@ GeneratorSchema.statics.findOrCreate = async function (condition, callback) {
   const self = this;
   /* eslint-disable-next-line arrow-body-style */
   return self.findOne(condition, (err, result) => {
-    return result
-      ? result
-      : self.create(condition, (err, res) => {
-          callback(err, res);
-        });
+    if(!result) {
+      result = self.create(condition, (err, res) => {
+        return res;
+      })
+    }
+    return result;
   });
 };
 

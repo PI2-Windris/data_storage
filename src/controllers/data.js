@@ -1,6 +1,7 @@
 const Generator = require("../models/generator");
 const climate = require("../models/climateData");
 const energy = require("../models/energyData");
+const logger = require("../utils/logger");
 
 const dataController = {
   registerClimate: async (data) => {
@@ -12,13 +13,12 @@ const dataController = {
 
       if (!currentGenerator) throw Error("Não foi possível criar o gerador");
 
-      const climateReading = await climate.create(climateData);
+      const climateReading = await climate.create({ generator: generatorId, climateData});
 
       currentGenerator.climateData.push(climateReading);
       await currentGenerator.save();
-      console.log(currentGenerator);
     } catch (e) {
-      console.log(e);
+      logger.error(e);
     }
   },
   registerEnergy: async (data) => {
@@ -35,7 +35,7 @@ const dataController = {
       currentGenerator.energyData.push(energyReading);
       currentGenerator.save();
     } catch (e) {
-      console.log(e);
+      logger.error(e);
     }
   },
 };
