@@ -1,17 +1,20 @@
 const mongoose = require("mongoose");
-const uuid = require('uuid')
-const Schema = mongoose.Schema;
 
-let EnergyDataSchema = new Schema({
-  generator_id: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref:'Generator'
+const { Schema } = mongoose;
+
+const EnergyDataSchema = new Schema(
+  {
+    generator_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Generator",
+    },
+    watts: {
+      type: String,
+    },
   },
-  watts: {
-    type:String
+  {
+    timestamps: true,
   }
-}, {
-  timestamps: true
-});
+);
 
-module.exports = mongoose.model('EnergyData', EnergyDataSchema);
+module.exports = mongoose.model("EnergyData", EnergyDataSchema);

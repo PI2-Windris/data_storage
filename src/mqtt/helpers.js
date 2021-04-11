@@ -5,7 +5,7 @@ const helper = {
     } catch (e) {
       return null;
     }
-  }
-}
+  },
+};
 
 module.exports = helper;
