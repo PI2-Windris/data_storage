@@ -10,6 +10,14 @@ const GeneratorSchema = new Schema(
     userId: {
       type: String,
     },
+    location: {
+      latitude: {
+        type: String,
+      },
+      longitude: {
+        type: String,
+      }
+    },
     energyData: [{ type: mongoose.Schema.Types.ObjectId, ref: "EnergyData" }],
     climateData: [{ type: mongoose.Schema.Types.ObjectId, ref: "ClimateData" }],
   },

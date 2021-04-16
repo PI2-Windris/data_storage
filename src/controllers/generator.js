@@ -97,6 +97,14 @@ const generatorController = {
     } catch (e) {
       res.json(e).status(400);
     }
+  },
+  getAll: async (req, res) => {
+    try {
+      const data = await generator.find({userId: null})
+      return res.json(data)
+    } catch (e) {
+      return res.json(e).status(400)
+    }
   }
 };
 
