@@ -1,6 +1,8 @@
 const generator = require("../models/generator");
 const climateData = require("../models/climateData");
 const energyData = require("../models/energyData");
+const receiver = require("../mqtt/receiver");
+const toCsv = require("../utils/csv");
 
 const generatorController = {
   create: async (req, res) => {
@@ -76,10 +78,18 @@ const generatorController = {
   climateDataByGenerator: async (req, res) => {
     try {
       const { generatorId } = req.params;
+      const { format } = req.query
 
       const data = await generator.findById(generatorId).populate('climateData')
 
-      res.json(data);
+      if (format == 'csv' ) {
+        const csv = await data.climateDataToCsv();
+        res.header('Content-Type', 'text/csv');
+        res.attachment('data.csv')
+        return res.status(200).send(csv)
+      }
+
+      return res.json(data);
     } catch (e) {
       res.json(e).status(400);
     }
