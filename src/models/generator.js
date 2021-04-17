@@ -10,6 +10,14 @@ const GeneratorSchema = new Schema(
     userId: {
       type: String,
     },
+    location: {
+      latitude: {
+        type: String,
+      },
+      longitude: {
+        type: String,
+      }
+    },
     energyData: [{ type: mongoose.Schema.Types.ObjectId, ref: "EnergyData" }],
     climateData: [{ type: mongoose.Schema.Types.ObjectId, ref: "ClimateData" }],
   },
@@ -19,14 +27,11 @@ const GeneratorSchema = new Schema(
 GeneratorSchema.statics.findOrCreate = async function (condition, callback) {
   const self = this;
   /* eslint-disable-next-line arrow-body-style */
-  return self.findOne(condition, (err, result) => {
-    if(!result) {
-      result = self.create(condition, (err, res) => {
-        return res;
-      })
-    }
-    return result;
-  });
+  let result =  await self.findOne(condition);
+
+  if(!result) result = await self.create(condition);
+
+  return result;
 };
 
 module.exports = mongoose.model("Generator", GeneratorSchema);

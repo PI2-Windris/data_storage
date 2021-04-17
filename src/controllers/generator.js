@@ -1,6 +1,7 @@
 const generator = require("../models/generator");
 const climateData = require("../models/climateData");
 const energyData = require("../models/energyData");
+const receiver = require("../mqtt/receiver");
 
 const generatorController = {
   create: async (req, res) => {
@@ -18,7 +19,9 @@ const generatorController = {
         return result;
       });
 
-      return res.json(currentGenerator);
+      res.json(currentGenerator);
+      receiver.publish(`generator/${currentGenerator._id}`, `userId: ${currentGenerator.userId}`)
+      return;
     } catch (e) {
       return res.json(e).status(400);
     }
@@ -93,6 +96,14 @@ const generatorController = {
       res.json(data);
     } catch (e) {
       res.json(e).status(400);
+    }
+  },
+  getAll: async (req, res) => {
+    try {
+      const data = await generator.find({userId: null})
+      return res.json(data)
+    } catch (e) {
+      return res.json(e).status(400)
     }
   }
 };
