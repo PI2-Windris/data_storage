@@ -2,6 +2,8 @@ const generator = require("../models/generator");
 const climateData = require("../models/climateData");
 const energyData = require("../models/energyData");
 const receiver = require("../mqtt/receiver");
+const toCsv = require("../utils/csv");
+const prepareQuery = require("../utils/query");
 
 const generatorController = {
   create: async (req, res) => {
@@ -37,13 +39,38 @@ const generatorController = {
   },
   energyDataByUser: async (req, res) => {
     try {
-      const generators = await generator
-        .find({ userId: req.params.userId })
-        .select("_id");
-      /* eslint-disable-next-line no-underscore-dangle */
-      const generatorIds = generators.map((item) => item._id);
+      const { format, skip, limit, dateQuery } = prepareQuery(req.query)
 
-      const data = await energyData.find().where("generator").in(generatorIds);
+      const data = await energyData
+                          .find(dateQuery)
+                          .skip(skip)
+                          .limit(limit)
+                          .where(`generator.userId = ${req.params.userId}`)
+                          .populate('generator');
+      /* Sadly the above query returns an array of instances of energyData
+      * so it's not possible to use instance methods to generate the csv, which would be
+      * a cleaner way of doing so. 
+      */
+      if (format === 'csv' ) {
+        const fields = [
+          { label: "Latitude", value: "generator.location.latitude"  },
+          { label: "Longitude", value: "generator.location.longitude" },
+          { label: "Tensão de Entrada(V)", value: "averageInputTension" },
+          { label: "Tensão Média de Saída (V)", value: "averageOutputTension", default: null },
+          { label: "Tensão Pico de Saída (V)", value: "outputTensionSpike", default: null },
+          { label: "Corrente Média de Saída(A)", value: "averageOutputCurrent", default: null },
+          { label: "Pico de Corrente de Saída(A)", value: "outputCurrentSpike", default: null },
+          { label: "Frequência Média das Pás(RPM)", value: "averageBladeFrequency", default: null },
+          { label: "Fornecimento Médio(VA)", value: "averageSupply", default: null },
+          { label: "Tensão(V)", value: "tension", default: null },
+          { label: "Horário da Medição", value: "createdAt", default: null }
+        ]
+            
+        const csv = await toCsv.transform(data, fields)      
+        res.header('Content-Type', 'text/csv');
+        res.attachment('data.csv')
+        return res.status(200).send(csv)
+      }
 
       return res.json(data);
     } catch (e) {
@@ -52,13 +79,32 @@ const generatorController = {
   },
   climateDataByUser: async (req, res) => {
     try {
-      const generators = await generator
-        .find({ userId: req.params.userId })
-        .select("_id");
-      /* eslint-disable-next-line no-underscore-dangle */
-      const generatorIds = generators.map((item) => item._id);
-      const data = await climateData.find().where("generator").in(generatorIds);
+      const { format, skip, limit, dateQuery } = prepareQuery(req.query)
 
+      const data = await climateData
+                          .find(dateQuery)
+                          .skip(skip)
+                          .limit(limit)
+                          .where(`generator.userId = ${req.params.userId}`)
+                          .populate('generator.location');
+
+      if (format === 'csv' ) {
+        const fields = [
+          { label: "Latitude", value: "generator.location.latitude"  },
+          { label: "Longitude", value: "generator.location.longitude" },
+          { label: "Umidade(RH)", value: "umidity" },
+          { label: "Temperatura(ºC)", value: "temperature", default: null },
+          { label: "Vento(m/s)", value: "wind", default: null },
+          { label: "CO² Gasoso(ppm)", value: "co2", default: null },
+          { label: "Horário da Medição", value: "createdAt", default: null }
+        ]
+      
+        const csv = await toCsv.transform(data, fields)      
+        res.header('Content-Type', 'text/csv');
+        res.attachment('data.csv')
+        return res.status(200).send(csv)
+      }
+      
       return res.json(data);
     } catch (e) {
       return res.json(e).status(400);
@@ -68,23 +114,57 @@ const generatorController = {
   energyDataByGenerator: async (req, res) => {
     try {
       const { generatorId } = req.params;
+      const { format, skip, limit, dateQuery } = prepareQuery(req.query)
 
-      const data = await generator.findById(generatorId).populate('energyData')
+      const data = await generator
+                          .findById(generatorId)
+                          .populate({
+                            path: 'energyData',
+                            options: {
+                              limit: limit,
+                              skip: skip
+                            },
+                            match: dateQuery
+                          })
 
-      res.json(data);
+      if (format == 'csv' ) {
+        const csv = await data.energyDataToCsv();
+        res.header('Content-Type', 'text/csv');
+        res.attachment('data.csv')
+        return res.status(200).send(csv)
+      }
+
+      return res.json(data);
     } catch (e) {
-      res.json(e).status(400);
+      return res.json(e).status(400);
     }
   },
   climateDataByGenerator: async (req, res) => {
     try {
       const { generatorId } = req.params;
+      const { format, skip, limit, dateQuery } = prepareQuery(req.query)
 
-      const data = await generator.findById(generatorId).populate('climateData')
+      const data = await generator
+                          .findById(generatorId)
+                          .populate({
+                            path: 'climateData',
+                            options: {
+                              limit: limit,
+                              skip: skip
+                            },
+                            match: dateQuery
+                          })
 
-      res.json(data);
+      if (format == 'csv' ) {
+        const csv = await data.climateDataToCsv();
+        res.header('Content-Type', 'text/csv');
+        res.attachment('data.csv')
+        return res.status(200).send(csv)
+      }
+
+      return res.json(data);
     } catch (e) {
-      res.json(e).status(400);
+      return res.json(e).status(400);
     }
   },
   get: async (req, res) => {
