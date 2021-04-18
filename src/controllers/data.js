@@ -2,6 +2,7 @@ const Generator = require("../models/generator");
 const climate = require("../models/climateData");
 const energy = require("../models/energyData");
 const logger = require("../utils/logger");
+const fuzzy = require("../utils/fuzzy");
 
 const dataController = {
   registerClimate: async (data) => {
@@ -37,6 +38,18 @@ const dataController = {
 
       currentGenerator.energyData.push(energyReading);
       currentGenerator.save();
+      if(currentGenerator.userId){
+        const lastClimateReading = await climate.findOne({ generator: currentGenerator._id}).sort({createdAt: -1})
+
+        const health = await fuzzy.eolicHealth({ 
+          wind: parseFloat(lastClimateReading.wind),
+          potency: parseFloat(energyReading.potencyFactor),
+          userId: currentGenerator.userId,
+          latitude: currentGenerator.latitude,
+          longitude: currentGenerator.longitude
+        })
+      }
+      return;
     } catch (e) {
       logger.error(e);
     }
