@@ -37,3 +37,23 @@ client.on('message', function (topic, message) {
   client.end()
 })
 ```
+Exemplo de mensagem de Coleta de Energia do Painel Solar:
+```
+client.on('connect', function () {
+  client.subscribe('energy', function (err) {
+    if (!err) {
+      client.publish('energy', '{"generatorId": "4733dcb3-35d9-4d3d-ab0b-4532abcd3da", "type": "panel", "potencyFactor":  "50", "averageInputTension":  "200", "averageOutputTension":  "200", "averageOutputCurrent":  "200", "outputTensionSpike":  "200", "outputCurrentSpike":  "200", "averageBladeFrequency":  "200", "averageSupply":  "200", "tension":  "200"}')
+    }
+  })
+})
+```
+Exemplo de mensagem de Coleta de Energia do Gerador Eólico
+```
+client.on('connect', function () {
+  client.subscribe('energy', function (err) {
+    if (!err) {
+      client.publish('energy', '{"generatorId": "4733dcb3-35d9-4d3d-ab0b-4532abcd3da", "type": "turbine", "potencyFactor":  "50", "averageInputTension":  "200", "averageOutputTension":  "200", "averageOutputCurrent":  "200", "outputTensionSpike":  "200", "outputCurrentSpike":  "200", "averageBladeFrequency":  "200", "averageSupply":  "200", "tension":  "200"}')
+    }
+  })
+})
+```
