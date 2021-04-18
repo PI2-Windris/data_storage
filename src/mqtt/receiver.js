@@ -28,6 +28,8 @@ const receiver = {
         }
       });
       receiver.client.subscribe("energy");
+      receiver.client.subscribe("generator/+");
+
       receiver.client.on("message", (topic, message) => {
         if (topic === "energy") {
           const parsed = helper.parseMessage(message);
@@ -39,6 +41,9 @@ const receiver = {
 
     connectCallback();
   },
+  publish: (topic, message) => {
+    receiver.client.publish(topic, message.toString())
+  }
 };
 
 module.exports = receiver;

@@ -3,14 +3,35 @@ const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
 const EnergyDataSchema = new Schema(
-  {
-    generator_id: {
-      type: mongoose.Schema.Types.ObjectId,
+  {    
+    generator: {
+      type: String,
       ref: "Generator",
     },
-    watts: {
+    averageInputTension: {
       type: String,
     },
+    averageOutputTension: {
+      type: String
+    },
+    averageOutputCurrent: {
+      type: String
+    },
+    outputTensionSpike: {
+      type: String
+    },
+    outputCurrentSpike: {
+      type: String
+    },
+    averageBladeFrequency: {
+      type: String
+    },
+    averageSupply: {
+      type: String
+    },
+    tension: {
+      type: String
+    }
   },
   {
     timestamps: true,
