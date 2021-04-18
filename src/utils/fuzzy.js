@@ -10,10 +10,23 @@ const fuzzy = {
     try {
       const { wind, potency } = measurements;
 
-      const health = await axios.post(`${PROCESSING_URL}/catatau/fuzzy`, { wind, potency})
+      const health = await axios.post(`${PROCESSING_URL}/fuzzy/eolic`, { wind, potency})
 
       fuzzy.notify({ health, measurements, message: "na turbina eólica"})
+      logger.info(health.data)
+      return health.data;
+    } catch (e) {
+      logger.error(e);
+    }
+  },
+  solarHealth: async (measurements) => {
+    try {
+      const { temperature, potency } = measurements;
 
+      const health = await axios.post(`${PROCESSING_URL}/fuzzy/solar`, { temperature, potency})
+
+      fuzzy.notify({ health, measurements, message: "no painel solar"})
+      logger.info(health.data)
       return;
     } catch (e) {
       logger.error(e);
@@ -28,7 +41,7 @@ const fuzzy = {
         const userInfo = await axios.get(`${USER_SERVICE_URL}/users/${userId}`)
         const mail = await mailer.sendMail(mailOptions({
           evaluatedAt: health.data.evaluated_at,
-          healthStatus: health.status,
+          healthStatus: health.data.health_status,
           userMail: userInfo.data.email,
           attachments: null,
           message: message,

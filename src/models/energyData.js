@@ -8,6 +8,9 @@ const EnergyDataSchema = new Schema(
       type: String,
       ref: "Generator",
     },
+    type: {
+      type: String
+    },
     potencyFactor: {
       type: String
     },

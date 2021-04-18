@@ -41,13 +41,23 @@ const dataController = {
       if(currentGenerator.userId){
         const lastClimateReading = await climate.findOne({ generator: currentGenerator._id}).sort({createdAt: -1})
 
-        const health = await fuzzy.eolicHealth({ 
-          wind: parseFloat(lastClimateReading.wind),
-          potency: parseFloat(energyReading.potencyFactor),
-          userId: currentGenerator.userId,
-          latitude: currentGenerator.latitude,
-          longitude: currentGenerator.longitude
-        })
+        if(energyReading.type == "turbine"){
+          const health = await fuzzy.eolicHealth({ 
+            wind: parseFloat(lastClimateReading.wind),
+            potency: parseFloat(energyReading.potencyFactor),
+            userId: currentGenerator.userId,
+            latitude: currentGenerator.latitude,
+            longitude: currentGenerator.longitude
+          })
+        } else {
+          const health = await fuzzy.solarHealth({ 
+            temperature: parseFloat(lastClimateReading.temperature),
+            potency: parseFloat(energyReading.potencyFactor),
+            userId: currentGenerator.userId,
+            latitude: currentGenerator.latitude,
+            longitude: currentGenerator.longitude
+          })
+        }
       }
       return;
     } catch (e) {
