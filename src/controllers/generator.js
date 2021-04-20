@@ -8,7 +8,7 @@ const prepareQuery = require("../utils/query");
 const generatorController = {
   create: async (req, res) => {
     try {
-      const { generatorId, userId } = req.body;
+      const { generatorId, userId, location } = req.body;
       const currentGenerator = await generator.findOrCreate({
         _id: generatorId,
       });
@@ -16,6 +16,7 @@ const generatorController = {
       if (currentGenerator.userId) return res.json(currentGenerator);
 
       currentGenerator.userId = userId;
+      currentGenerator.location = location;
       currentGenerator.save((err, result) => {
         if (err) throw new Error("Não foi possível atualizar o gerador");
         return result;
