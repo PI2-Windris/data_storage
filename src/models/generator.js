@@ -22,7 +22,7 @@ const GeneratorSchema = new Schema(
     energyData: [{ type: mongoose.Schema.Types.ObjectId, ref: "EnergyData" }],
     climateData: [{ type: mongoose.Schema.Types.ObjectId, ref: "ClimateData" }],
   },
-  { _id: false }
+  { _id: false, timestamps: true }
 );
 
 GeneratorSchema.statics.findOrCreate = async function (condition, callback) {

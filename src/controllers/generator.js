@@ -4,6 +4,7 @@ const energyData = require("../models/energyData");
 const receiver = require("../mqtt/receiver");
 const toCsv = require("../utils/csv");
 const prepareQuery = require("../utils/query");
+const maintenance = require("../utils/maintenance");
 
 const generatorController = {
   create: async (req, res) => {
@@ -186,7 +187,20 @@ const generatorController = {
     } catch (e) {
       return res.json(e).status(400)
     }
-  }
+  },
+  verifyMaintenance: async () => {    
+    try {
+      const generators = await generator.find({})
+
+      generators.forEach((gen) => {
+        const maintenanceReasons = maintenance.checkMaintenance(gen.createdAt);
+        if(maintenanceReasons.length > 0) maintenance.sendMaintenanceMail(gen, maintenanceReasons);
+      })
+
+    } catch (e) {
+      console.log(e);
+    }
+  },
 };
 
 module.exports = generatorController;
