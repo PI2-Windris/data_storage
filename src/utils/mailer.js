@@ -18,7 +18,8 @@ const mailOptions = (params) => {
   } = params;
 
   const template = {
-    notification: templates.notification(params)
+    notification: templates.behaviourNotification(params),
+    maintenance: templates.dateNotification(params)
   }[type]
 
   return {
