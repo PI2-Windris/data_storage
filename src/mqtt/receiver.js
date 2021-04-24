@@ -19,23 +19,21 @@ const receiver = {
     receiver.client.on("connect", () => {
       logger.info("Connected to Mqtt broker");
 
+      receiver.client.subscribe("energy");
+      receiver.client.subscribe("generator/+");
       receiver.client.subscribe("climate");
       receiver.client.on("message", (topic, message) => {
+        const parsed = helper.parseMessage(message);
+        logger.info("Topico:", topic)
         if (topic === "climate") {
-          const parsed = helper.parseMessage(message);
           dataController.registerClimate(parsed);
           messageCallback(parsed);
         }
-      });
-      receiver.client.subscribe("energy");
-      receiver.client.subscribe("generator/+");
-
-      receiver.client.on("message", (topic, message) => {
         if (topic === "energy") {
-          const parsed = helper.parseMessage(message);
           dataController.registerEnergy(parsed);
           messageCallback(parsed);
         }
+
       });
     });
 

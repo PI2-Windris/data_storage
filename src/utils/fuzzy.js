@@ -44,7 +44,10 @@ const fuzzy = {
           healthStatus: health.data.health_status,
           userMail: userInfo.data.email,
           attachments: null,
+          latitude: measurements.latitude,
+          longitude: measurements.longitude,
           message: message,
+          type: 'notification',
           ...measurements,
         }))
         logger.info(mail)

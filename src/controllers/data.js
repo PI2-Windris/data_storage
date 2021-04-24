@@ -46,16 +46,16 @@ const dataController = {
             wind: parseFloat(lastClimateReading.wind),
             potency: parseFloat(energyReading.potencyFactor),
             userId: currentGenerator.userId,
-            latitude: currentGenerator.latitude,
-            longitude: currentGenerator.longitude
+            latitude: currentGenerator.location.latitude,
+            longitude: currentGenerator.location.longitude
           })
         } else {
           const health = await fuzzy.solarHealth({ 
             temperature: parseFloat(lastClimateReading.temperature),
             potency: parseFloat(energyReading.potencyFactor),
             userId: currentGenerator.userId,
-            latitude: currentGenerator.latitude,
-            longitude: currentGenerator.longitude
+            latitude: currentGenerator.location.latitude,
+            longitude: currentGenerator.location.longitude
           })
         }
       }

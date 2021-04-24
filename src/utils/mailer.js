@@ -1,4 +1,5 @@
 const nodemailer = require('nodemailer');
+const templates = require('./mailTemplates/templates');
 
 const mailer = nodemailer.createTransport({
   host: "smtp.mailtrap.io",
@@ -11,23 +12,19 @@ const mailer = nodemailer.createTransport({
 
 const mailOptions = (params) => {
   const { 
-    latitude,
-    longitude,
-    healthStatus,
-    evaluatedAt,
-    attachments,
+    type,
     userMail,
-    message 
+    attachments
   } = params;
+
+  const template = {
+    notification: templates.notification(params)
+  }[type]
 
   return {
     from: '"Windris Team" <no-reply@windris.com>',
     to: userMail,
-    subject: 'Notificação de Funcionamento',
-    text: `Olá, houve um problema com seu gerador localizado em ${latitude}, ${longitude} avaliado em ${evaluatedAt}`,
-    html: `<b>Olá<b>, 
-      <br> Foi detectado um comportamento atípico ${message} de seu gerador localizado em ${latitude}, ${longitude}.
-      <br> Avaliou-se, em ${evaluatedAt}, um estado de saúde ${healthStatus}`,
+    ...template,
     ...attachments
   }
 }
