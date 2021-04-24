@@ -24,7 +24,7 @@ const receiver = {
       receiver.client.subscribe("climate");
       receiver.client.on("message", (topic, message) => {
         const parsed = helper.parseMessage(message);
-        logger.info("Topico:", topic)
+        logger.info("Topico:", topic);
         if (topic === "climate") {
           dataController.registerClimate(parsed);
           messageCallback(parsed);
@@ -33,15 +33,14 @@ const receiver = {
           dataController.registerEnergy(parsed);
           messageCallback(parsed);
         }
-
       });
     });
 
     connectCallback();
   },
   publish: (topic, message) => {
-    receiver.client.publish(topic, message.toString())
-  }
+    receiver.client.publish(topic, message.toString());
+  },
 };
 
 module.exports = receiver;

@@ -42,7 +42,7 @@ receiver.connect(
 );
 
 // This schedule sets it to run everyday at 3:00 a.M
-cron.schedule('00 00 03 * * *', async () => {
-  logger.info("Running Mail Verification")
-  await generatorController.verifyMaintenance()
-})
+cron.schedule("00 00 03 * * *", async () => {
+  logger.info("Running Mail Verification");
+  await generatorController.verifyMaintenance();
+});
