@@ -5,6 +5,7 @@ const receiver = require("../mqtt/receiver");
 const toCsv = require("../utils/csv");
 const prepareQuery = require("../utils/query");
 const maintenance = require("../utils/maintenance");
+const logger = require("../utils/logger");
 
 const generatorController = {
   create: async (req, res) => {
@@ -213,7 +214,7 @@ const generatorController = {
   },
   verifyMaintenance: async () => {
     try {
-      const generators = await generator.find({});
+      const generators = await generator.find({userId: {$ne: null}});
 
       generators.forEach((gen) => {
         const maintenanceReasons = maintenance.checkMaintenance(gen.createdAt);
@@ -221,7 +222,7 @@ const generatorController = {
           maintenance.sendMaintenanceMail(gen, maintenanceReasons);
       });
     } catch (e) {
-      console.log(e);
+      logger.error(e);
     }
   },
 };
