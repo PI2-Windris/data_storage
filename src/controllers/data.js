@@ -16,7 +16,10 @@ const dataController = {
 
       if (!currentGenerator) throw Error("Não foi possível criar o gerador");
 
-      const climateReading = await climate.create({ generator: generatorId, ...climateData});
+      const climateReading = await climate.create({
+        generator: generatorId,
+        ...climateData,
+      });
 
       currentGenerator.climateData.push(climateReading);
 
@@ -34,29 +37,34 @@ const dataController = {
 
       if (!currentGenerator) throw Error("Não foi possível criar o gerador");
 
-      const energyReading = await energy.create({ generator: generatorId, ...energyData });
+      const energyReading = await energy.create({
+        generator: generatorId,
+        ...energyData,
+      });
 
       currentGenerator.energyData.push(energyReading);
       currentGenerator.save();
-      if(currentGenerator.userId){
-        const lastClimateReading = await climate.findOne({ generator: currentGenerator._id}).sort({createdAt: -1})
+      if (currentGenerator.userId) {
+        const lastClimateReading = await climate
+          .findOne({ generator: currentGenerator._id })
+          .sort({ createdAt: -1 });
 
-        if(energyReading.type == "turbine"){
-          const health = await fuzzy.eolicHealth({ 
+        if (energyReading.type == "turbine") {
+          const health = await fuzzy.eolicHealth({
             wind: parseFloat(lastClimateReading.wind),
             potency: parseFloat(energyReading.potencyFactor),
             userId: currentGenerator.userId,
-            latitude: currentGenerator.latitude,
-            longitude: currentGenerator.longitude
-          })
+            latitude: currentGenerator.location.latitude,
+            longitude: currentGenerator.location.longitude,
+          });
         } else {
-          const health = await fuzzy.solarHealth({ 
+          const health = await fuzzy.solarHealth({
             temperature: parseFloat(lastClimateReading.temperature),
             potency: parseFloat(energyReading.potencyFactor),
             userId: currentGenerator.userId,
-            latitude: currentGenerator.latitude,
-            longitude: currentGenerator.longitude
-          })
+            latitude: currentGenerator.location.latitude,
+            longitude: currentGenerator.location.longitude,
+          });
         }
       }
       return;
