@@ -7,7 +7,7 @@ const generatorRouter = require("./router/generator");
 const receiver = require("./mqtt/receiver");
 const logger = require("./utils/logger");
 const generatorController = require("./controllers/generator");
-
+const cron = require('node-cron');
 const app = express();
 
 mongoose.connect(process.env.MONGO_URI, {
