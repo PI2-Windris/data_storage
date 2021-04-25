@@ -4,7 +4,7 @@ Este repositório é reponsável pelo "Serviço de Dispositivo" mapeado na nossa
 
 Ele expõe rotas de uma API REST para associação entre geradores e usuários, além de possuir um Listener MQTT que realiza subscribe no Gateway de eletrônica para receptar dados nos tópicos de energia e clima.
 
-A descrição de como subir todos os serviços está presente no Software_Gateway.
+A implementação foi realizada utilizando NodeJs com Express, banco de dados MongoDB e a biblioteca [MQTT](https://www.npmjs.com/package/mqtt) para conexão com o Eletronic Gateway.
 
 Exemplo de script para envio de mensagens MQTT em Node:
 
@@ -45,7 +45,8 @@ client.on('connect', function () {
       client.publish('energy', '{"generatorId": "5eef621c-9d0e-4235-94df-47393c84d294", "type": "panel", "averageInputTension":  "200", "averageOutputTension":  "200", "averageOutputCurrent":  "200", "outputTensionSpike":  "200", "outputCurrentSpike":  "200", "averageBladeFrequency":  "200", "averageSupply":  "10", "tension":  "200"}')
     }
   })
-})```
+})
+```
 Exemplo de mensagem de Coleta de Energia do Gerador Eólico
 ```
 client.on('connect', function () {
