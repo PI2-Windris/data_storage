@@ -15,7 +15,13 @@ const ClimateDataSchema = new Schema(
     temperature: {
       type: String,
     },
-    wind: {
+    windVelocity: {
+      type: String,
+    },
+    windDirection: {
+      type: String,
+    },
+    rain: {
       type: String,
     },
     co2: {
@@ -28,15 +34,17 @@ const ClimateDataSchema = new Schema(
 );
 
 ClimateDataSchema.methods.toCsv = async function () {
-  const latitude = this.generator.latitude;
-  const longitude = this.generator.longitude;
+  const latitude = this.generator.location.latitude;
+  const longitude = this.generator.location.longitude;
 
   const fields = [
     { label: "Latitude", value: () => latitude },
     { label: "Longitude", value: () => longitude },
     { label: "Umidade(RH)", value: "umidity" },
     { label: "Temperatura(ºC)", value: "temperature", default: null },
-    { label: "Vento(m/s)", value: "wind", default: null },
+    { label: "Vento(m/s)", value: "windVelocity", default: null },
+    { label: "Direção do Vento", value: "windDirection", default: null },
+    { label: "Nível de Chuva(mm)", value: "rain", default: null },
     { label: "CO² Gasoso(ppm)", value: "co2", default: null },
     { label: "Horário da Medição", value: "createdAt", default: null },
   ];

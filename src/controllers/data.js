@@ -36,7 +36,7 @@ const dataController = {
       });
 
       if (!currentGenerator) throw Error("Não foi possível criar o gerador");
-
+      console.log(energyData)
       const energyReading = await energy.create({
         generator: generatorId,
         ...energyData,
@@ -51,8 +51,8 @@ const dataController = {
 
         if (energyReading.type == "turbine") {
           const health = await fuzzy.eolicHealth({
-            wind: parseFloat(lastClimateReading.wind),
-            potency: parseFloat(energyReading.potencyFactor),
+            wind: parseFloat(lastClimateReading.windVelocity),
+            potency: parseFloat(energyReading.averageSupply),
             userId: currentGenerator.userId,
             latitude: currentGenerator.location.latitude,
             longitude: currentGenerator.location.longitude,
@@ -60,7 +60,7 @@ const dataController = {
         } else {
           const health = await fuzzy.solarHealth({
             temperature: parseFloat(lastClimateReading.temperature),
-            potency: parseFloat(energyReading.potencyFactor),
+            potency: parseFloat(energyReading.averageSupply),
             userId: currentGenerator.userId,
             latitude: currentGenerator.location.latitude,
             longitude: currentGenerator.location.longitude,

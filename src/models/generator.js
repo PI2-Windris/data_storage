@@ -34,12 +34,15 @@ GeneratorSchema.statics.findOrCreate = async function (condition, callback) {
 };
 
 GeneratorSchema.methods.climateDataToCsv = async function () {
+
   const fields = [
-    { label: "Latitude", value: () => this.latitude },
-    { label: "Longitude", value: () => this.longitude },
+    { label: "Latitude", value: () => this.location.latitude },
+    { label: "Longitude", value: () => this.location.longitude },
     { label: "Umidade(RH)", value: "umidity" },
     { label: "Temperatura(ºC)", value: "temperature", default: null },
-    { label: "Vento(m/s)", value: "wind", default: null },
+    { label: "Vento(m/s)", value: "windVelocity", default: null },
+    { label: "Direção do Vento", value: "windDirection", default: null },
+    { label: "Nível de Chuva(mm)", value: "rain", default: null },
     { label: "CO² Gasoso(ppm)", value: "co2", default: null },
     { label: "Horário da Medição", value: "createdAt", default: null },
   ];
@@ -50,8 +53,8 @@ GeneratorSchema.methods.climateDataToCsv = async function () {
 
 GeneratorSchema.methods.energyDataToCsv = async function () {
   const fields = [
-    { label: "Latitude", value: () => this.latitude },
-    { label: "Longitude", value: () => this.longitude },
+    { label: "Latitude", value: () => this.location.latitude },
+    { label: "Longitude", value: () => this.location.longitude },
     { label: "Tensão de Entrada(V)", value: "averageInputTension" },
     {
       label: "Tensão Média de Saída (V)",
@@ -78,8 +81,7 @@ GeneratorSchema.methods.energyDataToCsv = async function () {
       value: "averageBladeFrequency",
       default: null,
     },
-    { label: "Fornecimento Médio(VA)", value: "averageSupply", default: null },
-    { label: "Tensão(V)", value: "tension", default: null },
+    { label: "Fornecimento Médio(Watts)", value: "averageSupply", default: null },
     { label: "Horário da Medição", value: "createdAt", default: null },
   ];
 

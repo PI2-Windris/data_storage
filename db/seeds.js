@@ -45,8 +45,10 @@ for(let j = 0; j < 20; j++){
     generator: j % 2 == 0 ? gen1 : gen2,
     temperature: faker.datatype.number().toString(),
     umidity: faker.datatype.number().toString(),
-    wind: faker.datatype.number().toString(),
+    windSpeed: faker.datatype.number().toString(),
+    windDirection: faker.address.direction(),
     co2: faker.datatype.number().toString(),
+    rain: faker.datatype.number().toString(),
     _id: id()
   })
 }
@@ -55,7 +57,6 @@ for(let j = 0; j < 20; j++){
   energy.push({
     generator: j % 2 == 0 ? gen1 : gen2,
     type: j % 2 == 0 ? "turbine" : "panel",
-    potencyFactor: faker.datatype.number().toString(),
     averageInputTension: faker.datatype.number().toString(),
     averageOutputTension: faker.datatype.number().toString(),
     averageOutputCurrent: faker.datatype.number().toString(),
