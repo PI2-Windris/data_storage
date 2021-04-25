@@ -6,7 +6,9 @@ Ele expõe rotas de uma API REST para associação entre geradores e usuários, 
 
 A implementação foi realizada utilizando NodeJs com Express, banco de dados MongoDB e a biblioteca [MQTT](https://www.npmjs.com/package/mqtt) para conexão com o Eletronic Gateway.
 
-Exemplo de script para envio de mensagens MQTT em Node:
+O client MQTT executado neste serviço aguarda a comunicação nos canais: "energy" e "climate", mais detalhes sobre os campos exatos, forma de coleta podem ser encontrados no capítulo de Integração do relatório.
+
+Para fins de desenvolvimento, abaixo está um exemplo de script que pode realizar a comunicação com o serviço via MQTT.
 
 ```
 var mqtt = require('mqtt')
