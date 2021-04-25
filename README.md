@@ -26,7 +26,7 @@ var client  = mqtt.connect(options)
 client.on('connect', function () {
   client.subscribe('climate', function (err) {
     if (!err) {
-      client.publish('climate', '{"generatorId": "e21e048f-45f6-4a0e-88fc-ba4dcd0e1f9c", "umidity": "400000.0", "tempearture": "30.0", "wind": "4.3"}')
+      client.publish('climate', '{"generatorId": "5eef621c-9d0e-4235-94df-47393c84d294", "temperature": "10", "umidity": "20", "windVelocity": "10", "windDirection": "west", "rain": "1", "co2": "100" }')
     }
   })
 })
@@ -42,18 +42,16 @@ Exemplo de mensagem de Coleta de Energia do Painel Solar:
 client.on('connect', function () {
   client.subscribe('energy', function (err) {
     if (!err) {
-      client.publish('energy', '{"generatorId": "4733dcb3-35d9-4d3d-ab0b-4532abcd3da", "type": "panel", "potencyFactor":  "50", "averageInputTension":  "200", "averageOutputTension":  "200", "averageOutputCurrent":  "200", "outputTensionSpike":  "200", "outputCurrentSpike":  "200", "averageBladeFrequency":  "200", "averageSupply":  "200", "tension":  "200"}')
+      client.publish('energy', '{"generatorId": "5eef621c-9d0e-4235-94df-47393c84d294", "type": "panel", "averageInputTension":  "200", "averageOutputTension":  "200", "averageOutputCurrent":  "200", "outputTensionSpike":  "200", "outputCurrentSpike":  "200", "averageBladeFrequency":  "200", "averageSupply":  "10", "tension":  "200"}')
     }
   })
-})
-```
+})```
 Exemplo de mensagem de Coleta de Energia do Gerador Eólico
 ```
 client.on('connect', function () {
   client.subscribe('energy', function (err) {
     if (!err) {
-      client.publish('energy', '{"generatorId": "4733dcb3-35d9-4d3d-ab0b-4532abcd3da", "type": "turbine", "potencyFactor":  "50", "averageInputTension":  "200", "averageOutputTension":  "200", "averageOutputCurrent":  "200", "outputTensionSpike":  "200", "outputCurrentSpike":  "200", "averageBladeFrequency":  "200", "averageSupply":  "200", "tension":  "200"}')
+      client.publish('energy', '{"generatorId": "5eef621c-9d0e-4235-94df-47393c84d294", "type": "turbine", "averageInputTension":  "200", "averageOutputTension":  "200", "averageOutputCurrent":  "200", "outputTensionSpike":  "200", "outputCurrentSpike":  "200", "averageBladeFrequency":  "200", "averageSupply":  "10", "tension":  "200"}')
     }
   })
-})
-```
+})```
