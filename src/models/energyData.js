@@ -3,41 +3,41 @@ const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
 const EnergyDataSchema = new Schema(
-  {    
+  {
     generator: {
       type: String,
       ref: "Generator",
     },
     type: {
-      type: String
+      type: String,
     },
     potencyFactor: {
-      type: String
+      type: String,
     },
     averageInputTension: {
       type: String,
     },
     averageOutputTension: {
-      type: String
+      type: String,
     },
     averageOutputCurrent: {
-      type: String
+      type: String,
     },
     outputTensionSpike: {
-      type: String
+      type: String,
     },
     outputCurrentSpike: {
-      type: String
+      type: String,
     },
     averageBladeFrequency: {
-      type: String
+      type: String,
     },
     averageSupply: {
-      type: String
+      type: String,
     },
     tension: {
-      type: String
-    }
+      type: String,
+    },
   },
   {
     timestamps: true,

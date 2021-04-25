@@ -2,7 +2,6 @@ const express = require("express");
 const generatorController = require("../controllers/generator");
 
 const router = express.Router();
-
 router.post("/", generatorController.create);
 
 router.get("/", generatorController.getAll);

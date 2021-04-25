@@ -4,6 +4,8 @@ const energyData = require("../models/energyData");
 const receiver = require("../mqtt/receiver");
 const toCsv = require("../utils/csv");
 const prepareQuery = require("../utils/query");
+const maintenance = require("../utils/maintenance");
+const logger = require("../utils/logger");
 
 const generatorController = {
   create: async (req, res) => {
@@ -23,7 +25,10 @@ const generatorController = {
       });
 
       res.json(currentGenerator);
-      receiver.publish(`generator/${currentGenerator._id}`, `userId: ${currentGenerator.userId}`)
+      receiver.publish(
+        `generator/${currentGenerator._id}`,
+        `userId: ${currentGenerator.userId}`
+      );
       return;
     } catch (e) {
       return res.json(e).status(400);
@@ -31,7 +36,7 @@ const generatorController = {
   },
   findByUser: async (req, res) => {
     try {
-      const data = await generator.find({ userId: req.params.userId});
+      const data = await generator.find({ userId: req.params.userId });
 
       return res.json(data);
     } catch (e) {
@@ -40,21 +45,21 @@ const generatorController = {
   },
   energyDataByUser: async (req, res) => {
     try {
-      const { format, skip, limit, dateQuery } = prepareQuery(req.query)
+      const { format, skip, limit, dateQuery } = prepareQuery(req.query);
 
       const data = await energyData
-                          .find(dateQuery)
-                          .skip(skip)
-                          .limit(limit)
-                          .where(`generator.userId = ${req.params.userId}`)
-                          .populate('generator');
+        .find(dateQuery)
+        .skip(skip)
+        .limit(limit)
+        .where(`generator.userId = ${req.params.userId}`)
+        .populate("generator");
       /* Sadly the above query returns an array of instances of energyData
-      * so it's not possible to use instance methods to generate the csv, which would be
-      * a cleaner way of doing so. 
-      */
-      if (format === 'csv' ) {
+       * so it's not possible to use instance methods to generate the csv, which would be
+       * a cleaner way of doing so.
+       */
+      if (format === "csv") {
         const fields = [
-          { label: "Latitude", value: "generator.location.latitude"  },
+          { label: "Latitude", value: "generator.location.latitude" },
           { label: "Longitude", value: "generator.location.longitude" },
           { label: "Tensão de Entrada(V)", value: "averageInputTension" },
           {
@@ -83,18 +88,18 @@ const generatorController = {
             default: null,
           },
           {
-            label: "Fornecimento Médio(Watts)",
+            label: "Fornecimento Médio(WATTS)",
             value: "averageSupply",
             default: null,
           },
           { label: "Tensão(V)", value: "tension", default: null },
-          { label: "Horário da Medição", value: "createdAt", default: null }
-        ]
-            
-        const csv = await toCsv.transform(data, fields)      
-        res.header('Content-Type', 'text/csv');
-        res.attachment('data.csv')
-        return res.status(200).send(csv)
+          { label: "Horário da Medição", value: "createdAt", default: null },
+        ];
+
+        const csv = await toCsv.transform(data, fields);
+        res.header("Content-Type", "text/csv");
+        res.attachment("data.csv");
+        return res.status(200).send(csv);
       }
 
       return res.json(data);
@@ -104,32 +109,32 @@ const generatorController = {
   },
   climateDataByUser: async (req, res) => {
     try {
-      const { format, skip, limit, dateQuery } = prepareQuery(req.query)
+      const { format, skip, limit, dateQuery } = prepareQuery(req.query);
 
       const data = await climateData
-                          .find(dateQuery)
-                          .skip(skip)
-                          .limit(limit)
-                          .where(`generator.userId = ${req.params.userId}`)
-                          .populate('generator.location');
+        .find(dateQuery)
+        .skip(skip)
+        .limit(limit)
+        .where(`generator.userId = ${req.params.userId}`)
+        .populate("generator.location");
 
-      if (format === 'csv' ) {
+      if (format === "csv") {
         const fields = [
-          { label: "Latitude", value: "generator.location.latitude"  },
+          { label: "Latitude", value: "generator.location.latitude" },
           { label: "Longitude", value: "generator.location.longitude" },
           { label: "Umidade(RH)", value: "umidity" },
           { label: "Temperatura(ºC)", value: "temperature", default: null },
           { label: "Vento(m/s)", value: "wind", default: null },
           { label: "CO² Gasoso(ppm)", value: "co2", default: null },
-          { label: "Horário da Medição", value: "createdAt", default: null }
-        ]
-      
-        const csv = await toCsv.transform(data, fields)      
-        res.header('Content-Type', 'text/csv');
-        res.attachment('data.csv')
-        return res.status(200).send(csv)
+          { label: "Horário da Medição", value: "createdAt", default: null },
+        ];
+
+        const csv = await toCsv.transform(data, fields);
+        res.header("Content-Type", "text/csv");
+        res.attachment("data.csv");
+        return res.status(200).send(csv);
       }
-      
+
       return res.json(data);
     } catch (e) {
       return res.json(e).status(400);
@@ -139,24 +144,22 @@ const generatorController = {
   energyDataByGenerator: async (req, res) => {
     try {
       const { generatorId } = req.params;
-      const { format, skip, limit, dateQuery } = prepareQuery(req.query)
+      const { format, skip, limit, dateQuery } = prepareQuery(req.query);
 
-      const data = await generator
-                          .findById(generatorId)
-                          .populate({
-                            path: 'energyData',
-                            options: {
-                              limit: limit,
-                              skip: skip
-                            },
-                            match: dateQuery
-                          })
+      const data = await generator.findById(generatorId).populate({
+        path: "energyData",
+        options: {
+          limit: limit,
+          skip: skip,
+        },
+        match: dateQuery,
+      });
 
-      if (format == 'csv' ) {
+      if (format == "csv") {
         const csv = await data.energyDataToCsv();
-        res.header('Content-Type', 'text/csv');
-        res.attachment('data.csv')
-        return res.status(200).send(csv)
+        res.header("Content-Type", "text/csv");
+        res.attachment("data.csv");
+        return res.status(200).send(csv);
       }
 
       return res.json(data);
@@ -167,24 +170,22 @@ const generatorController = {
   climateDataByGenerator: async (req, res) => {
     try {
       const { generatorId } = req.params;
-      const { format, skip, limit, dateQuery } = prepareQuery(req.query)
+      const { format, skip, limit, dateQuery } = prepareQuery(req.query);
 
-      const data = await generator
-                          .findById(generatorId)
-                          .populate({
-                            path: 'climateData',
-                            options: {
-                              limit: limit,
-                              skip: skip
-                            },
-                            match: dateQuery
-                          })
+      const data = await generator.findById(generatorId).populate({
+        path: "climateData",
+        options: {
+          limit: limit,
+          skip: skip,
+        },
+        match: dateQuery,
+      });
 
-      if (format == 'csv' ) {
+      if (format == "csv") {
         const csv = await data.climateDataToCsv();
-        res.header('Content-Type', 'text/csv');
-        res.attachment('data.csv')
-        return res.status(200).send(csv)
+        res.header("Content-Type", "text/csv");
+        res.attachment("data.csv");
+        return res.status(200).send(csv);
       }
 
       return res.json(data);
@@ -205,12 +206,25 @@ const generatorController = {
   },
   getAll: async (req, res) => {
     try {
-      const data = await generator.find({userId: null})
-      return res.json(data)
+      const data = await generator.find({ userId: null });
+      return res.json(data);
     } catch (e) {
-      return res.json(e).status(400)
+      return res.json(e).status(400);
     }
-  }
+  },
+  verifyMaintenance: async () => {
+    try {
+      const generators = await generator.find({userId: {$ne: null}});
+
+      generators.forEach((gen) => {
+        const maintenanceReasons = maintenance.checkMaintenance(gen.createdAt);
+        if (maintenanceReasons.length > 0)
+          maintenance.sendMaintenanceMail(gen, maintenanceReasons);
+      });
+    } catch (e) {
+      logger.error(e);
+    }
+  },
 };
 
 module.exports = generatorController;

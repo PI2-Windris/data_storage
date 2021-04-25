@@ -7,8 +7,7 @@ const generatorRouter = require("./router/generator");
 const receiver = require("./mqtt/receiver");
 const logger = require("./utils/logger");
 const generatorController = require("./controllers/generator");
-const cron = require("node-cron");
-
+const cron = require('node-cron');
 const app = express();
 
 mongoose.connect(process.env.MONGO_URI, {
@@ -41,3 +40,9 @@ receiver.connect(
     logger.info("Message Received");
   }
 );
+
+// This schedule sets it to run everyday at 3:00 a.M
+cron.schedule("00 00 03 * * *", async () => {
+  logger.info("Running Mail Verification");
+  await generatorController.verifyMaintenance();
+});
