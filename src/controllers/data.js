@@ -36,7 +36,7 @@ const dataController = {
       });
 
       if (!currentGenerator) throw Error("Não foi possível criar o gerador");
-
+      console.log(energyData)
       const energyReading = await energy.create({
         generator: generatorId,
         ...energyData,

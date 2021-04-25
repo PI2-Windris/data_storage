@@ -34,8 +34,8 @@ const ClimateDataSchema = new Schema(
 );
 
 ClimateDataSchema.methods.toCsv = async function () {
-  const latitude = this.generator.latitude;
-  const longitude = this.generator.longitude;
+  const latitude = this.generator.location.latitude;
+  const longitude = this.generator.location.longitude;
 
   const fields = [
     { label: "Latitude", value: () => latitude },

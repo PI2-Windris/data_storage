@@ -120,15 +120,17 @@ const generatorController = {
 
       if (format === "csv") {
         const fields = [
-          { label: "Latitude", value: "generator.location.latitude" },
-          { label: "Longitude", value: "generator.location.longitude" },
+          { label: "Latitude", value: () => latitude },
+          { label: "Longitude", value: () => longitude },
           { label: "Umidade(RH)", value: "umidity" },
           { label: "Temperatura(ºC)", value: "temperature", default: null },
-          { label: "Vento(m/s)", value: "wind", default: null },
+          { label: "Vento(m/s)", value: "windVelocity", default: null },
+          { label: "Direção do Vento", value: "windDirection", default: null },
+          { label: "Nível de Chuva(mm)", value: "rain", default: null },
           { label: "CO² Gasoso(ppm)", value: "co2", default: null },
           { label: "Horário da Medição", value: "createdAt", default: null },
         ];
-
+      
         const csv = await toCsv.transform(data, fields);
         res.header("Content-Type", "text/csv");
         res.attachment("data.csv");
