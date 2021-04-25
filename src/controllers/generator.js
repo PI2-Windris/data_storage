@@ -57,12 +57,36 @@ const generatorController = {
           { label: "Latitude", value: "generator.location.latitude"  },
           { label: "Longitude", value: "generator.location.longitude" },
           { label: "Tensão de Entrada(V)", value: "averageInputTension" },
-          { label: "Tensão Média de Saída (V)", value: "averageOutputTension", default: null },
-          { label: "Tensão Pico de Saída (V)", value: "outputTensionSpike", default: null },
-          { label: "Corrente Média de Saída(A)", value: "averageOutputCurrent", default: null },
-          { label: "Pico de Corrente de Saída(A)", value: "outputCurrentSpike", default: null },
-          { label: "Frequência Média das Pás(RPM)", value: "averageBladeFrequency", default: null },
-          { label: "Fornecimento Médio(VA)", value: "averageSupply", default: null },
+          {
+            label: "Tensão Média de Saída (V)",
+            value: "averageOutputTension",
+            default: null,
+          },
+          {
+            label: "Tensão Pico de Saída (V)",
+            value: "outputTensionSpike",
+            default: null,
+          },
+          {
+            label: "Corrente Média de Saída(A)",
+            value: "averageOutputCurrent",
+            default: null,
+          },
+          {
+            label: "Pico de Corrente de Saída(A)",
+            value: "outputCurrentSpike",
+            default: null,
+          },
+          {
+            label: "Frequência Média das Pás(RPM)",
+            value: "averageBladeFrequency",
+            default: null,
+          },
+          {
+            label: "Fornecimento Médio(Watts)",
+            value: "averageSupply",
+            default: null,
+          },
           { label: "Tensão(V)", value: "tension", default: null },
           { label: "Horário da Medição", value: "createdAt", default: null }
         ]
