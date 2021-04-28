@@ -5,7 +5,7 @@ const { MongoMemoryServer } = require('mongodb-memory-server-global');
 const mongod = new MongoMemoryServer({
   instance: {
     port: 27017,
-    ip: 'mongodb://stefano:felipe@mongo',
+    ip: process.env.MONGO_URI,
     dbPath: '/tmp/'
   }
 });
