@@ -46,3 +46,5 @@ cron.schedule("00 00 03 * * *", async () => {
   logger.info("Running Mail Verification");
   await generatorController.verifyMaintenance();
 });
+
+module.exports = app;
