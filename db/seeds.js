@@ -43,10 +43,12 @@ let energy = [];
 for(let j = 0; j < 20; j++){
   climate.push({
     generator: j % 2 == 0 ? gen1 : gen2,
-    temperature: faker.datatype.number().toString(),
-    umidity: faker.datatype.number().toString(),
-    wind: faker.datatype.number().toString(),
-    co2: faker.datatype.number().toString(),
+    temperature: faker.datatype.number(40).toString(),
+    umidity: faker.datatype.number(60).toString(),
+    windSpeed: faker.datatype.number(25).toString(),
+    windDirection: faker.address.direction(),
+    co2: faker.datatype.number(1000).toString(),
+    rain: faker.datatype.number(20).toString(),
     _id: id()
   })
 }
@@ -55,15 +57,14 @@ for(let j = 0; j < 20; j++){
   energy.push({
     generator: j % 2 == 0 ? gen1 : gen2,
     type: j % 2 == 0 ? "turbine" : "panel",
-    potencyFactor: faker.datatype.number().toString(),
-    averageInputTension: faker.datatype.number().toString(),
-    averageOutputTension: faker.datatype.number().toString(),
-    averageOutputCurrent: faker.datatype.number().toString(),
-    outputTensionSpike: faker.datatype.number().toString(),
-    outputCurrentSpike: faker.datatype.number().toString(),
-    averageBladeFrequency: faker.datatype.number().toString(),
-    averageSupply: faker.datatype.number().toString(),
-    tension: faker.datatype.number().toString(),
+    averageInputTension: faker.datatype.number(500).toString(),
+    averageOutputTension: faker.datatype.number(1000).toString(),
+    averageOutputCurrent: faker.datatype.number(500).toString(),
+    outputTensionSpike: faker.datatype.number(300).toString(),
+    outputCurrentSpike: faker.datatype.number(400).toString(),
+    averageBladeFrequency: faker.datatype.number(800).toString(),
+    averageSupply: faker.datatype.number(600).toString(),
+    tension: faker.datatype.number(200).toString(),
     _id: id()
   })
 }
